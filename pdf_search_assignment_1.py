@@ -19,42 +19,6 @@ def split_para(pdf_text):
 
 split_para_text1 = split_para(text)
 
-def extract_body_paragraphs(pdf_path, heading_font_threshold=12.5):
-    body_paragraphs = []
-    current_para = ""
-    current_fontsize = None
-
-    for page_layout in extract_pages(pdf_path):
-        for element in page_layout:
-            if isinstance(element, LTTextContainer):
-                for text_line in element:
-                    line_text = text_line.get_text().strip()
-                    if not line_text:
-                        continue
-
-                    fontsizes = [char.size for char in text_line if isinstance(char, LTChar)]
-                    if not fontsizes:
-                        continue
-                    avg_fontsize = sum(fontsizes) / len(fontsizes)
-
-                    if avg_fontsize >= heading_font_threshold:
-                        continue
-
-                    if current_para and line_text.endswith('.'):
-                        current_para += " " + line_text
-                        body_paragraphs.append(current_para.strip())
-                        current_para = ""
-                    else:
-                        current_para += " " + line_text
-
-    if current_para.strip():
-        body_paragraphs.append(current_para.strip())
-
-    return body_paragraphs
-
-pdf_path = r"C:\Users\MalathiV\Documents\git project\AI_assignment\PDF_search_Assignment\AI.pdf"  
-split_para_text = extract_body_paragraphs(pdf_path)
-
 import sqlite3
 def setup_db():
     conn = sqlite3.connect('ai_db.db')
@@ -84,7 +48,7 @@ def search_in_para(cursor) :
     results = []
 
     found = False
-    for para in split_para_text:
+    for para in split_para_text1:
         if cor_keyword in para.split():
             print(f"\nFirst paragraph containing the word '{cor_keyword}':\n")
             print(para)
@@ -97,7 +61,7 @@ def search_in_para(cursor) :
     max_freq = 0
     best_para = ""
 
-    for para in split_para_text:
+    for para in split_para_text1:
         words = para.split()
         freq = words.count(cor_keyword)
         if freq > max_freq:
