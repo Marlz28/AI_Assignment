@@ -1,6 +1,4 @@
 
-from pdfminer.high_level import extract_pages
-from pdfminer.layout import LTTextContainer, LTChar
 from pdfminer.high_level import extract_text
 import string
 from fuzzywuzzy import fuzz
